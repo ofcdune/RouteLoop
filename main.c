@@ -119,6 +119,14 @@ void shunting_yard() {
 			exit(-1);
         }
         token[0] = c;
+
+		if (flags.isEscaped) {
+			/* concatenation byte */
+			enqueue((void *) 10, input_queue);
+			enqueue(token, input_queue);
+			flags.isEscaped = 0;
+		}
+
 		if ('(' == c) {
 			enqueue((void *) 10, input_queue);
 			push(token, token_stack);
@@ -154,6 +162,8 @@ void shunting_yard() {
 					break;
 				}
 			}
+		} else if ('\\' == c) {
+			flags.isEscaped = 1;
 		} else {
 			/* concatenation byte */
 			enqueue((void *) 10, input_queue);
