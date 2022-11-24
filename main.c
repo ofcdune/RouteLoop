@@ -46,7 +46,7 @@ unsigned char get_precedence(char letter) {
 	if (CONCAT == letter) {
 		return 3;
 	} else if ('*' == letter || '+' == letter) {
-		return 2;
+		return 4;
 	} else if ('|' == letter) {
 		return 1;
 	} else {
