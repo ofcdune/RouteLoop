@@ -324,6 +324,14 @@ void parse_pattern(const char *new_pattern, int size) {
 #define PATTERN_L 7
 
 int main() {
+
+	/*
+	  * Examples:
+	  * i(ce*)d = ice*~d~~
+	  * p(ai|e)n = pai~e|n~~
+	  * (hi*|e) = hi*~e|
+	 */
+
 	char new_pattern[PATTERN_L] = "i(ce*)d";
 	// set_pattern(new_pattern, PATTERN_L);
 
