@@ -3,7 +3,7 @@
 // #include "regex.h"
 #include <string.h>
 
-#define PATTERN_L 8
+#define PATTERN_L 4
 #define CONCAT '~'
 
 /* TODO: HINT: Please do not use this code for production, this is a simple test setup */
@@ -84,7 +84,7 @@ void from_rpn() {
             exit(-1);
         }
         from_queue = (char *) dequeue(input_queue);
-        // printf("%s ", *from_queue != CONCAT ? from_queue : "CONCAT");
+        printf("%s ", *from_queue != CONCAT ? from_queue : "CONCAT");
         if ('|' == *from_queue) {
             tree_walker->type = '|';
             tree_walker->identifier = 1;
@@ -133,15 +133,7 @@ void from_rpn() {
         push(tree_walker, rpn_stack);
     }
     putchar('\n');
-
     tree = pop(rpn_stack);
-
-    // int i = 0;
-    // while (!is_empty_stack(rpn_stack)) {
-    //     i++;
-    //     tree_walker = pop(rpn_stack);
-    //     print_tree(tree_walker);
-    // }
 }
 
 void into_tokenstack_left(const char *token_left) {
@@ -241,6 +233,7 @@ void shunting_yard() {
             enqueue(token, input_queue);
             // printf("(Escaped): Enqueuing %c into the input queue\n", c);
             flags.isEscaped = 0;
+            continue;
         }
 
         /* main body of the shunting yard algorithm */
@@ -330,7 +323,6 @@ void parse_pattern(const char *new_pattern, int size) {
     input_queue = initialize_queue();
 
     shunting_yard();
-    print_tree(tree);
 }
 
 int main() {
@@ -342,10 +334,11 @@ int main() {
       * (hi*|e) = hi*~e|
      */
 
-    char new_pattern[PATTERN_L] = "p(ai|e)n";
+    char new_pattern[PATTERN_L] = "pa\\(";
     // set_pattern(new_pattern, PATTERN_L);
 
     parse_pattern(new_pattern, PATTERN_L);
-    print_tree(tree);
+    // print_tree(tree);
+
     return 0;
 }
