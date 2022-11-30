@@ -8,6 +8,8 @@
 
 /* TODO: HINT: Please do not use this code for production, this is a simple test setup */
 
+/* TODO: Replace the input queue with a stack and process the RPN directly */
+
 typedef struct InputNode {
     /*
       * (c) concatenation
