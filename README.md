@@ -20,7 +20,7 @@ Please use with caution, and with your own risk. There are mechanisms in place t
 
 python3 main.py [Network] [Delay] [Optional: --v]
 
-with Network as your IPv4-Network in CIDR-Notation and Delay in milliseconds. `--v` prints out the progress of the application, but potentially reduces speed. If not specified, the program will only print out
+with Network as your IPv4-Network in CIDR-Notation and Delay in milliseconds (A delay of 0 means no delay). `--v` prints out the progress of the application, but potentially reduces speed. If not specified, the program will only print out
 the suspected Loops (IPv4-Addresses for which the TTL exceeded in transit)
 
 # Roadmap
