@@ -24,7 +24,7 @@ with Network as your IPv4-Network in CIDR-Notation and Delay in milliseconds (A 
 the suspected Loops (IPv4-Addresses for which the TTL exceeded in transit)
 
 # Math
-Really, math? Yes, this is to estimate the duration of the scan. A /24 network for example has 2 to the power of 32-24 hosts, namely 256. Divide that by the milliseconds you specified and it should provide you with a reasonable estimate, provided, your network speed is fast enough. If you don't want delay, the network delay and bandwidth can limit the speed, but a few milliseconds already are slower than that and cancel out the effects. The program shows the speed estimate when verbose is specified however. 
+Really, math? Yes, this is to estimate the duration of the scan, or rather, the net waiting time. A /24 network for example has 2 to the power of 32-24 hosts, namely 256. Divide that by the milliseconds you specified and it should provide you with a reasonable estimate, provided, your network speed is fast enough. If you don't want delay, the network delay and bandwidth can limit the speed, but a few milliseconds already are slower than that and cancel out the effects. The program shows the speed estimate when verbose is specified however. 
 
 # Roadmap
 - Add support for exporting results
