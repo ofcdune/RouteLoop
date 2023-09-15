@@ -23,6 +23,9 @@ python3 main.py [Network] [Delay] [Optional: --v]
 with Network as your IPv4-Network in CIDR-Notation and Delay in milliseconds (A delay of 0 means no delay). `--v` prints out the progress of the application, but potentially reduces speed. If not specified, the program will only print out
 the suspected Loops (IPv4-Addresses for which the TTL exceeded in transit)
 
+# Math
+Really, math? Yes, this is to estimate the duration of the scan. A /24 network has 2 to the power of 32-24 hosts, namely 256. Divide that by the milliseconds you specified and it should provide you with a reasonable estimate, provided, your network speed is fast enough.
+
 # Roadmap
 - Add support for exporting results
 - Add support for IPv6
