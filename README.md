@@ -6,6 +6,7 @@ What RouteLoop can do:
 - Look for routing loops by pinging networks and seeing if a "ttl exceeded" gets replied
 - Work fast or slow
 - Pick IP-Addresses at random to avoid cluttering up a network
+- Provide you with inspiration for your own tools
 
 What RouteLoop cannot do:
 - Actually fix these routing loops
