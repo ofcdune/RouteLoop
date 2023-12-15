@@ -11,6 +11,7 @@ What RouteLoop can do:
 What RouteLoop cannot do:
 - Actually fix these routing loops
 - Look into configurations of routers
+- Provide a breakfast (you are probably looking for [Fruit Loops](https://www.kelloggs.de/de_DE/brands/froot-loops-consumer-brand.html))
 
 # Caution
 Please use with caution, and with your own risk. There are mechanisms in place to prevent an accidental DOS attack, but you should still be careful.
