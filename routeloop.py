@@ -3,44 +3,16 @@
 # Automatically detects any routing loop in the given networks
 # Author: dune-official
 
-from ipaddress import IPv4Network, IPv4Address
+from ipaddress import IPv4Network
 from sys import argv
+from scapy.sendrecv import AsyncSniffer, send
 from scapy.layers.inet import IP, ICMP
-from scapy.sendrecv import sr1
 from scapy.config import conf
-from threading import Thread
 from time import sleep, perf_counter_ns
 from random import shuffle, seed
 
-
 # disables verbose output from scapy (still displays warnings)
 conf.verb = False
-
-
-def loop_ping(ip_addr: IPv4Address):
-    """
-    The 'meat' of this script. Pings one IPv4 address and waits for a reply. If the reply is a TTL timeout, the function prints it into stdout.
-
-    :param ip_addr: The IPv4 address
-    :return:
-    """
-
-    # maximum TTL to really be sure
-    scan_packet = IP(dst=str(ip_addr), ttl=255) / ICMP(type=8, code=0)
-
-    # please modify the timeout to your liking, however keep in mind that the worse the Delay, the longer the timeout should be
-    # in seconds
-    nxt = sr1(scan_packet, timeout=.1)
-
-    if nxt is None:
-        return
-
-    # use sprintf to search packet fields
-    if nxt.sprintf("%ICMP.type%") == "time-exceeded":
-        print(f"\033[31;1;4m{ip_addr}: TTL exceeded in transit, Loop suspected!\033[0m")
-        return
-    else:
-        return
 
 
 def scan_no_delay(hosts: list, verbose_: bool):
@@ -51,42 +23,57 @@ def scan_no_delay(hosts: list, verbose_: bool):
     :param verbose_:
     :return:
     """
-    threads = []
-    for rnd_host in hosts:
-        thread = Thread(target=loop_ping, args=[rnd_host])
-        threads.append(thread)
-        thread.start()
 
+    asyncsn = AsyncSniffer(store=0, filter="icmp", prn=ttl_exceeded)
+    asyncsn.start()
+
+    for rnd_host in hosts:
+
+        ping(rnd_host)
         if verbose_:
             print(f"Pinged {rnd_host}")
 
-    for i in range(len(threads)):
-        threads[i].join()
+    sleep(0.1)
+    asyncsn.stop()
 
 
 def scan_delay(hosts: list, verbose_: bool, dl: int):
     """
-    Scans with a delay option.
+    Scans without a delay option.
 
     :param hosts:
     :param verbose_:
-    :param dl:
     :return:
     """
-    
-    threads = []
-    for rnd_host in hosts:
-        thread = Thread(target=loop_ping, args=[rnd_host])
-        threads.append(thread)
-        thread.start()
 
+    asyncsn = AsyncSniffer(store=0, filter="icmp", prn=ttl_exceeded)
+    asyncsn.start()
+
+    for rnd_host in hosts:
+
+        ping(rnd_host)
         if verbose_:
             print(f"Pinged {rnd_host}")
 
         sleep(dl / 1000)
 
-    for i in range(len(threads)):
-        threads[i].join()
+    sleep(0.1)
+    asyncsn.stop()
+
+
+def ping(addr):
+    # maximum TTL to really be sure
+    send(IP(dst=str(addr), ttl=255) / ICMP(type=8, code=0))
+
+
+def ttl_exceeded(packet):
+    # use sprintf to search packet fields
+    ip = packet.sprintf("%ICMP.dst%")
+    if packet.sprintf("%ICMP.type%") == "time-exceeded":
+        print(f"\033[31;1;4m{ip}: TTL exceeded in transit, Loop suspected!\033[0m")
+        return
+    else:
+        return
 
 
 if __name__ == '__main__':
@@ -94,7 +81,6 @@ if __name__ == '__main__':
     if len(argv) > 2:
 
         # use: routeloop.py <NETWORK> <DELAY=0> <--v optionally>
-        
         network = IPv4Network(argv[1])
         delay = int(argv[2])
 
@@ -117,4 +103,3 @@ if __name__ == '__main__':
     else:
         print(f"Usage: {argv[0]} [Network] [Delay] [Optional: --v]")
         exit(0)
-
